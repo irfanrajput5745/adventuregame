@@ -1,159 +1,46 @@
-import inquirer from 'inquirer';
-import chalk from 'chalk';
-// Classes Player & Opponent
-class Player {
-    name;
-    fuel = 100;
-    constructor(name) {
-        this.name = name;
-    }
-    fuelDecrease() {
-        let fuel = this.fuel - 25;
-        this.fuel = fuel;
-    }
-    fuelIncrease() {
-        this.fuel = 100;
-    }
-}
-class Opponent {
-    name;
-    fuel = 100;
-    constructor(name) {
-        this.name = name;
-    }
-    fuelDecrease() {
-        let fuel = this.fuel - 25;
-        this.fuel = fuel;
-    }
-}
-// Player Name & Opponent Select
-let player = await inquirer.prompt({
-    type: "input",
-    name: "name",
-    message: "Please Enter Your Name: "
-});
-let opponent = await inquirer.prompt({
+import chalk from "chalk";
+import inquirer from "inquirer";
+// Currency Coverter API Link
+let apiLink = "https://v6.exchangerate-api.com/v6/f574f7c218a6e8c5fda7ff12/latest/PKR";
+// Fetching Data 
+let fetchData = async (data) => {
+    let fetchData = await fetch(data);
+    let res = await fetchData.json();
+    return res.conversion_rates;
+};
+let data = await fetchData(apiLink);
+// Object to Array
+let countries = Object.keys(data);
+// User input first country
+let firstCountry = await inquirer.prompt({
     type: "list",
-    name: "select",
-    message: "Select Your Opponent: ",
-    choices: ["Skeleton", "Assassin", "Zombie"]
+    name: "name",
+    message: "Converting from",
+    choices: countries,
 });
-// Gather Data
-let p1 = new Player(player.name);
-let o1 = new Opponent(opponent.select);
-do {
-    // Skeletoncs
-    if (opponent.select == "Skeleton") {
-        let ask = await inquirer.prompt({
-            type: "list",
-            name: "opt",
-            message: "Select Your Opponent",
-            choices: ["Attack", "Drink Portion", "Run For Your Life.."]
-        });
-        if (ask.opt == "Attack") {
-            let num = Math.floor(Math.random() * 2);
-            if (num > 0) {
-                p1.fuelDecrease();
-                console.log(chalk.bold.red(`${p1.name} fuel is ${p1.fuel}`));
-                console.log(chalk.bold.green(`${o1.name} fuel is ${o1.fuel}`));
-                if (p1.fuel <= 0) {
-                    console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-                    process.exit();
-                }
-            }
-            if (num <= 0) {
-                o1.fuelDecrease();
-                console.log(chalk.bold.red(`${o1.name} fuel is ${o1.fuel}`));
-                console.log(chalk.bold.green(`${p1.name} fuel is ${p1.fuel}`));
-            }
-            if (o1.fuel <= 0) {
-                console.log(chalk.green.bold.italic("You Win"));
-                process.exit();
-            }
-        }
-        if (ask.opt == "Drink Portion") {
-            p1.fuelIncrease();
-            console.log(chalk.bold.green(`You Drink Health Portion Your fuel is ${p1.fuel}`));
-        }
-        if (ask.opt == "Run For Your Life..") {
-            console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-            process.exit();
-        }
-    }
-    // Assassin
-    if (opponent.select == "Assassin") {
-        let ask = await inquirer.prompt({
-            type: "list",
-            name: "opt",
-            message: "Select Your Opponent",
-            choices: ["Attack", "Drink Portion", "Run For Your Life.."]
-        });
-        if (ask.opt == "Attack") {
-            let num = Math.floor(Math.random() * 2);
-            if (num > 0) {
-                p1.fuelDecrease();
-                console.log(chalk.bold.red(`${p1.name} fuel is ${p1.fuel}`));
-                console.log(chalk.bold.green(`${o1.name} fuel is ${o1.fuel}`));
-                if (p1.fuel <= 0) {
-                    console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-                    process.exit();
-                }
-            }
-            if (num <= 0) {
-                o1.fuelDecrease();
-                console.log(chalk.bold.red(`${o1.name} fuel is ${o1.fuel}`));
-                console.log(chalk.bold.green(`${p1.name} fuel is ${p1.fuel}`));
-            }
-            if (o1.fuel <= 0) {
-                console.log(chalk.green.bold.italic("You Win"));
-                process.exit();
-            }
-        }
-        if (ask.opt == "Drink Portion") {
-            p1.fuelIncrease();
-            console.log(chalk.bold.green(`You Drink Health Portion Your fuel is ${p1.fuel}`));
-        }
-        if (ask.opt == "Run For Your Life..") {
-            console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-            process.exit();
-        }
-    }
-    // Zombie
-    if (opponent.select == "Zombie") {
-        let ask = await inquirer.prompt({
-            type: "list",
-            name: "opt",
-            message: "Select Your Opponent",
-            choices: ["Attack", "Drink Portion", "Run For Your Life.."]
-        });
-        if (ask.opt == "Attack") {
-            let num = Math.floor(Math.random() * 2);
-            if (num > 0) {
-                p1.fuelDecrease();
-                console.log(chalk.bold.red(`${p1.name} fuel is ${p1.fuel}`));
-                console.log(chalk.bold.green(`${o1.name} fuel is ${o1.fuel}`));
-                if (p1.fuel <= 0) {
-                    console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-                    process.exit();
-                }
-            }
-            if (num <= 0) {
-                o1.fuelDecrease();
-                console.log(chalk.bold.red(`${o1.name} fuel is ${o1.fuel}`));
-                console.log(chalk.bold.green(`${p1.name} fuel is ${p1.fuel}`));
-            }
-            if (o1.fuel <= 0) {
-                console.log(chalk.green.bold.italic("You Win"));
-                process.exit();
-            }
-        }
-        if (ask.opt == "Drink Portion") {
-            p1.fuelIncrease();
-            console.log(chalk.bold.green(`You Drink Health Portion Your fuel is ${p1.fuel}`));
-        }
-        if (ask.opt == "Run For Your Life..") {
-            console.log(chalk.red.bold.italic("Yos Loose, Better Luck Next Time"));
-            process.exit();
-        }
-    }
-} while (true);
+console.log(`Converting from ${chalk.greenBright.bold(firstCountry.name)}`);
+// First country money
+let userMoney = await inquirer.prompt({
+    type: "input",
+    name: "rupee",
+    message: `Please enter the ammount ${chalk.greenBright.bold(firstCountry.name)}: `
+});
+console.log(userMoney.rupee);
+// Convert Country
+let secondCountry = await inquirer.prompt({
+    type: "list",
+    name: "name",
+    message: "Converting to",
+    choices: countries,
+});
+// Conversion Rate
+let cnv = `https://v6.exchangerate-api.com/v6/f574f7c218a6e8c5fda7ff12/pair/${firstCountry.name}/${secondCountry.name}`;
+// fetching data for conversion rate
+let cnvData = async (data) => {
+    let cnvData = await fetch(data);
+    let res = await cnvData.json();
+    return res.conversion_rate;
+};
+let conversionRate = await cnvData(cnv);
+let convertedRate = userMoney.rupee * conversionRate;
+console.log(`Your ${chalk.greenBright.bold(firstCountry.name)} ${chalk.greenBright.bold(userMoney.rupee)} in ${chalk.greenBright.bold(secondCountry.name)} is ${chalk.greenBright.bold(convertedRate)}`);
